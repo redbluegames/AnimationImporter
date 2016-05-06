@@ -249,6 +249,40 @@ namespace AnimationImporter
 			}
 		}
 
+		public string Suffix
+		{
+			get {
+				var splitName = name.Split('_');
+				if (splitName.Length <= 1)
+				{
+					return string.Empty;
+				}
+				else
+				{
+					var lastSuffix = splitName[splitName.Length - 1];
+					return lastSuffix;
+				}
+			}
+		}
+
+		public string RootName
+		{
+			get {
+				int suffixLength = Suffix.Length;
+				if (suffixLength == 0)
+				{
+					return name;
+				}
+				else
+				{
+					// Subtract one for the underscore separator
+					int rootLength = name.Length - Suffix.Length - 1;
+					var root = name.Substring(0, rootLength);
+					return root;
+				}
+			}
+		}
+
 		// ================================================================================
 		//  public methods
 		// --------------------------------------------------------------------------------
