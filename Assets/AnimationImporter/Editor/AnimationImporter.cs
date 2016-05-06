@@ -451,8 +451,8 @@ namespace AnimationImporter
 
 				foreach (var animation in animations.animations)
 				{
-					AnimatorState state = controller.layers[0].stateMachine.AddState(animation.name);
-					state.motion = animation.animationClip;
+					AnimatorState state = CreateStateOrBlendTreeForClip(controller, animation);
+					AssignClipToAnimatorState(animation, state);
 				}
 			}
 			else
@@ -469,6 +469,101 @@ namespace AnimationImporter
 
 			EditorUtility.SetDirty(controller);
 			AssetDatabase.SaveAssets();
+		}
+
+		private AnimatorState CreateStateOrBlendTreeForClip(AnimatorController controller, ImportedSingleAnimationInfo clipInfo)
+		{
+			// Get Blend Type for clip
+			// For single, create state
+			// For anything else, if state doesn't exist, create it according to blend type
+			//   Add clip to correct slot
+			// If state exists, add it into the correct slot
+			var blendType = GetBlendTypeForClip(clipInfo);
+			AnimatorState state;
+			if (blendType == BlendType.SingleAnim)
+			{
+				state = controller.layers[0].stateMachine.AddState(clipInfo.RootName);
+				state.motion = clipInfo.animationClip;
+			}
+			else
+			{
+				// If this animation needs a blend tree, either create the tree or return an existing one.
+				AnimatorState existingState = null;
+				var childStates = controller.layers[0].stateMachine.states;
+				foreach (var childState in childStates)
+				{
+					if (childState.state.name == clipInfo.RootName)
+					{
+						existingState = childState.state;
+						break;
+					}
+				}
+				if (existingState != null)
+				{
+					return existingState;
+				}
+				else
+				{
+					BlendTree tree;
+					state = controller.CreateBlendTreeInController(clipInfo.RootName, out tree);
+					InitializeBlendTree(ref tree, clipInfo.RootName);
+				}
+			}
+
+			return state;
+		}
+
+		private static void InitializeBlendTree(ref BlendTree tree, string name)
+		{
+			tree.name = name;
+			tree.blendType = BlendTreeType.FreeformCartesian2D;
+			tree.blendParameter = "FaceX";
+			tree.blendParameterY = "FaceY";
+
+			tree.hideFlags = HideFlags.HideInHierarchy;
+		}
+
+		private void AssignClipToAnimatorState (ImportedSingleAnimationInfo clipInfo, AnimatorState state)
+		{
+			if (state.motion.GetType() == typeof(BlendTree))
+			{
+				var tree = (BlendTree)state.motion;
+				tree.AddChild(clipInfo.animationClip, suffixPositions[clipInfo.Suffix]);
+			}
+			else
+			{
+				state.motion = clipInfo.animationClip;
+			}
+		}
+
+		private Dictionary<string, Vector2> suffixPositions = new Dictionary<string, Vector2> ()
+		{
+			{"U", new Vector2 (0.0f, 1.0f)},
+			{"UR", new Vector2 (1.0f, 1.0f)},
+			{"R", new Vector2 (1.0f, 0.0f)},
+			{"DR", new Vector2 (1.0f, -1.0f)},
+			{"D", new Vector2 (0.0f, -1.0f)},
+			{"DL", new Vector2 (-1.0f, -1.0f)},
+			{"L", new Vector2 (-1.0f, 0.0f)},
+			{"UL", new Vector2 (-1.0f, 1.0f)},
+		};
+
+		private BlendType GetBlendTypeForClip(ImportedSingleAnimationInfo clipInfo)
+		{
+			if (!suffixPositions.ContainsKey(clipInfo.Suffix))
+			{
+				return BlendType.SingleAnim;
+			}
+
+			return BlendType.EightDirection;
+		}
+
+		private enum BlendType
+		{
+			SingleAnim,
+			TwoDirection,
+			FourDirection,
+			EightDirection
 		}
 
 		private void CreateAnimatorOverrideController(ImportedAnimationInfo animations)
