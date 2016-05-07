@@ -1,0 +1,1683 @@
+fileFormatVersion: 2
+guid: 1c2983237405e427686e919333ee0150
+timeCreated: 1462645875
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: npc_template 0
+    21300002: npc_template 1
+    21300004: npc_template 2
+    21300006: npc_template 3
+    21300008: npc_template 4
+    21300010: npc_template 5
+    21300012: npc_template 6
+    21300014: npc_template 7
+    21300016: npc_template 8
+    21300018: npc_template 9
+    21300020: npc_template 10
+    21300022: npc_template 11
+    21300024: npc_template 12
+    21300026: npc_template 13
+    21300028: npc_template 14
+    21300030: npc_template 15
+    21300032: npc_template 16
+    21300034: npc_template 17
+    21300036: npc_template 18
+    21300038: npc_template 19
+    21300040: npc_template 20
+    21300042: npc_template 21
+    21300044: npc_template 22
+    21300046: npc_template 23
+    21300048: npc_template 24
+    21300050: npc_template 25
+    21300052: npc_template 26
+    21300054: npc_template 27
+    21300056: npc_template 28
+    21300058: npc_template 29
+    21300060: npc_template 30
+    21300062: npc_template 31
+    21300064: npc_template 32
+    21300066: npc_template 33
+    21300068: npc_template 34
+    21300070: npc_template 35
+    21300072: npc_template 36
+    21300074: npc_template 37
+    21300076: npc_template 38
+    21300078: npc_template 39
+    21300080: npc_template 40
+    21300082: npc_template 41
+    21300084: npc_template 42
+    21300086: npc_template 43
+    21300088: npc_template 44
+    21300090: npc_template 45
+    21300092: npc_template 46
+    21300094: npc_template 47
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 256
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 1
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: npc_template 0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -15}
+        - {x: 12, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 14, y: -7}
+        - {x: 11, y: -8}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -7}
+        - {x: 15, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -14}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 11, y: -7}
+        - {x: 8, y: -8}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 10, y: -7}
+        - {x: 10, y: -15}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 13, y: -6}
+        - {x: 9, y: -10}
+        - {x: 9, y: -14}
+        - {x: 11, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -9}
+        - {x: 15, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -12}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 8, y: -7}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 224
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 9, y: -15}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 9, y: -7}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -15}
+        - {x: 12, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 14, y: -7}
+        - {x: 11, y: -8}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -7}
+        - {x: 15, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 11
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -14}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 11, y: -7}
+        - {x: 8, y: -8}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 12
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 10, y: -7}
+        - {x: 10, y: -15}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 13
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 13, y: -6}
+        - {x: 9, y: -10}
+        - {x: 9, y: -14}
+        - {x: 11, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -9}
+        - {x: 15, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 14
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -12}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 8, y: -7}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 15
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 192
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 9, y: -15}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 9, y: -7}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -14, y: 14}
+        - {x: -14, y: -1}
+        - {x: 14, y: -1}
+        - {x: 15, y: 0}
+        - {x: 15, y: 11}
+        - {x: 5, y: 14}
+    - name: npc_template 16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -15}
+        - {x: 12, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 14, y: -7}
+        - {x: 11, y: -8}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 17
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 18
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -7}
+        - {x: 15, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 19
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -14}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 11, y: -7}
+        - {x: 8, y: -8}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 20
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 10, y: -7}
+        - {x: 10, y: -15}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 21
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 13, y: -6}
+        - {x: 9, y: -10}
+        - {x: 9, y: -14}
+        - {x: 11, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -9}
+        - {x: 15, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 22
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -12}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 8, y: -7}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 23
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 9, y: -15}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 9, y: -7}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -15}
+        - {x: 12, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 14, y: -7}
+        - {x: 11, y: -8}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 25
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 26
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -7}
+        - {x: 15, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 27
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -14}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 11, y: -7}
+        - {x: 8, y: -8}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 28
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 10, y: -7}
+        - {x: 10, y: -15}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 29
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 13, y: -6}
+        - {x: 9, y: -10}
+        - {x: 9, y: -14}
+        - {x: 11, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -9}
+        - {x: 15, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 30
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -12}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 8, y: -7}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 31
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 9, y: -15}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 9, y: -7}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: 1, y: 15}
+        - {x: -15, y: 15}
+        - {x: -16, y: 12}
+        - {x: -16, y: 1}
+        - {x: -15, y: -1}
+        - {x: 12, y: -1}
+        - {x: 13, y: 0}
+        - {x: 13, y: 11}
+        - {x: 12, y: 14}
+    - name: npc_template 32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -15}
+        - {x: 12, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 14, y: -7}
+        - {x: 11, y: -8}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 33
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 34
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -7}
+        - {x: 15, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 35
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -14}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 11, y: -7}
+        - {x: 8, y: -8}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 36
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 10, y: -7}
+        - {x: 10, y: -15}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 37
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 13, y: -6}
+        - {x: 9, y: -10}
+        - {x: 9, y: -14}
+        - {x: 11, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -9}
+        - {x: 15, y: -6}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 38
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -12}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 8, y: -7}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 39
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 9, y: -15}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 9, y: -7}
+      - - {x: -9, y: -3}
+        - {x: -15, y: -7}
+        - {x: -15, y: -9}
+        - {x: -14, y: -12}
+        - {x: -7, y: -14}
+        - {x: -5, y: -14}
+        - {x: -1, y: -9}
+        - {x: -1, y: -8}
+        - {x: -6, y: -3}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -15}
+        - {x: 12, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 14, y: -7}
+        - {x: 11, y: -8}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 41
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 42
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 11, y: -6}
+        - {x: 9, y: -7}
+        - {x: 9, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -7}
+        - {x: 15, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 43
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -14}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 11, y: -7}
+        - {x: 8, y: -8}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 44
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: -6}
+        - {x: 10, y: -7}
+        - {x: 10, y: -15}
+        - {x: 11, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 45
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 13, y: -6}
+        - {x: 9, y: -10}
+        - {x: 9, y: -14}
+        - {x: 11, y: -16}
+        - {x: 15, y: -16}
+        - {x: 16, y: -15}
+        - {x: 16, y: -9}
+        - {x: 15, y: -6}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 46
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 8, y: -12}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -9}
+        - {x: 15, y: -7}
+        - {x: 8, y: -7}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    - name: npc_template 47
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 9, y: -15}
+        - {x: 10, y: -16}
+        - {x: 16, y: -16}
+        - {x: 16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 9, y: -7}
+      - - {x: -10, y: -3}
+        - {x: -15, y: -8}
+        - {x: -15, y: -9}
+        - {x: -10, y: -14}
+        - {x: -7, y: -13}
+        - {x: -1, y: -10}
+        - {x: -1, y: -8}
+        - {x: -2, y: -6}
+      - - {x: -5, y: 16}
+        - {x: -16, y: 16}
+        - {x: -16, y: -1}
+        - {x: 15, y: -1}
+        - {x: 15, y: 11}
+        - {x: 6, y: 14}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

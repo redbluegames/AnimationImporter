@@ -64,7 +64,7 @@ namespace AnimationImporter
 		public static void ImportAnimationsMenu()
 		{
 			EditorWindow.GetWindow(typeof(AnimationImporter), false, "Anim Importer");
-        }
+		}
 
 		// ================================================================================
 		//  unity methods
@@ -109,7 +109,7 @@ namespace AnimationImporter
 			if (EditorPrefs.HasKey(PREFS_PREFIX + "asepritePath"))
 			{
 				_asepritePath = EditorPrefs.GetString(PREFS_PREFIX + "asepritePath");
-            }
+			}
 			else
 			{
 				_asepritePath = AsepriteImporter.standardApplicationPath;
@@ -168,7 +168,7 @@ namespace AnimationImporter
 			}
 
 			CheckIfApplicationIsValid();
-        }
+		}
 
 		private void SaveUserConfig()
 		{
@@ -224,9 +224,9 @@ namespace AnimationImporter
 			if (GUILayout.Button("Select"))
 			{
 				var path = EditorUtility.OpenFilePanel(
-					"Select Aseprite Application",
-					"",
-					"exe");
+					           "Select Aseprite Application",
+					           "",
+					           "exe");
 				if (!string.IsNullOrEmpty(path))
 				{
 					newPath = path;
@@ -257,7 +257,7 @@ namespace AnimationImporter
 				sprite values
 			*/
 
-			SpriteAlignment newAlignment = (SpriteAlignment)EditorGUILayout.EnumPopup("Sprite Alignment",_spriteAlignment);
+			SpriteAlignment newAlignment = (SpriteAlignment)EditorGUILayout.EnumPopup("Sprite Alignment", _spriteAlignment);
 			if (newAlignment != _spriteAlignment)
 			{
 				_spriteAlignment = newAlignment;
@@ -433,7 +433,7 @@ namespace AnimationImporter
 			}
 
 			return null;
-        }
+		}
 
 		private void CreateAnimatorController(ImportedAnimationInfo animations)
 		{
@@ -445,72 +445,57 @@ namespace AnimationImporter
 
 			if (controller == null)
 			{
-				// create a new controller and place every animation as a state on the first layer
+				// create a new controller
 				controller = AnimatorController.CreateAnimatorControllerAtPath(animations.basePath + "/" + animations.name + ".controller");
 				controller.AddLayer("Default");
-
-				foreach (var animation in animations.animations)
-				{
-					AnimatorState state = CreateStateOrBlendTreeForClip(controller, animation);
-					AssignClipToAnimatorState(animation, state);
-				}
 			}
-			else
+
+			// add animation to new states or existing ones that match the animation
+			foreach (var animation in animations.animations)
 			{
-				// look at all states on the first layer and replace clip if state has the same name
-				var childStates = controller.layers[0].stateMachine.states;
-				foreach (var childState in childStates)
-				{
-					AnimationClip clip = animations.GetClip(childState.state.name);
-					if (clip != null)
-						childState.state.motion = clip;
-				}
+				AnimatorState state = FindOrCreateStateForClip(controller, animation);
+				AssignClipToAnimatorState(animation, state);
 			}
 
 			EditorUtility.SetDirty(controller);
 			AssetDatabase.SaveAssets();
 		}
 
-		private AnimatorState CreateStateOrBlendTreeForClip(AnimatorController controller, ImportedSingleAnimationInfo clipInfo)
+		private AnimatorState FindOrCreateStateForClip(AnimatorController controller, ImportedSingleAnimationInfo clipInfo)
 		{
-			// Get Blend Type for clip
-			// For single, create state
-			// For anything else, if state doesn't exist, create it according to blend type
-			//   Add clip to correct slot
-			// If state exists, add it into the correct slot
-			var blendType = GetBlendTypeForClip(clipInfo);
-			AnimatorState state;
-			if (blendType == BlendType.SingleAnim)
+			AnimatorState state = null;
+
+			// first try to find an existing state
+			foreach (var childState in controller.layers[0].stateMachine.states)
 			{
-				state = controller.layers[0].stateMachine.AddState(clipInfo.RootName);
-				state.motion = clipInfo.animationClip;
-			}
-			else
-			{
-				// If this animation needs a blend tree, either create the tree or return an existing one.
-				AnimatorState existingState = null;
-				var childStates = controller.layers[0].stateMachine.states;
-				foreach (var childState in childStates)
+				if (childState.state.name == clipInfo.StateName)
 				{
-					if (childState.state.name == clipInfo.RootName)
-					{
-						existingState = childState.state;
-						break;
-					}
+					state = childState.state;
+					break;
 				}
-				if (existingState != null)
+			}
+
+			// if no state is found, create one
+			if (state == null)
+			{
+				if (!IsClipPartOfBlendTree(clipInfo))
 				{
-					return existingState;
+					state = controller.layers[0].stateMachine.AddState(clipInfo.StateName);
 				}
 				else
 				{
 					BlendTree tree;
 					state = controller.CreateBlendTreeInController(clipInfo.RootName, out tree);
-					InitializeBlendTree(ref tree, clipInfo.RootName);
+					InitializeBlendTree(ref tree, clipInfo.StateName);
 				}
 			}
 
 			return state;
+		}
+
+		private bool IsClipPartOfBlendTree(ImportedSingleAnimationInfo clipInfo)
+		{
+			return suffixPositions.ContainsKey(clipInfo.Suffix);
 		}
 
 		private static void InitializeBlendTree(ref BlendTree tree, string name)
@@ -519,16 +504,26 @@ namespace AnimationImporter
 			tree.blendType = BlendTreeType.FreeformCartesian2D;
 			tree.blendParameter = "FaceX";
 			tree.blendParameterY = "FaceY";
-
 			tree.hideFlags = HideFlags.HideInHierarchy;
 		}
 
-		private void AssignClipToAnimatorState (ImportedSingleAnimationInfo clipInfo, AnimatorState state)
+		private void AssignClipToAnimatorState(ImportedSingleAnimationInfo clipInfo, AnimatorState state)
 		{
-			if (state.motion.GetType() == typeof(BlendTree))
+			bool stateContainsBlendTree = state.motion != null && state.motion.GetType() == typeof(BlendTree);
+			if (stateContainsBlendTree)
 			{
 				var tree = (BlendTree)state.motion;
-				tree.AddChild(clipInfo.animationClip, suffixPositions[clipInfo.Suffix]);
+				int clipIndexToReplace = GetExistingIndexForClipInTree(tree, clipInfo);
+				if (clipIndexToReplace == -1)
+				{
+					tree.AddChild(clipInfo.animationClip, suffixPositions[clipInfo.Suffix]);
+				}
+				else
+				{
+					var children = tree.children;
+					children[clipIndexToReplace].motion = clipInfo.animationClip;
+					tree.children = children;
+				}
 			}
 			else
 			{
@@ -536,35 +531,56 @@ namespace AnimationImporter
 			}
 		}
 
-		private Dictionary<string, Vector2> suffixPositions = new Dictionary<string, Vector2> ()
+		// Check if a BlendTree already has a motion (empty or not) for a clip
+		private int GetExistingIndexForClipInTree(BlendTree tree, ImportedSingleAnimationInfo clipInfo)
 		{
-			{"U", new Vector2 (0.0f, 1.0f)},
-			{"UR", new Vector2 (1.0f, 1.0f)},
-			{"R", new Vector2 (1.0f, 0.0f)},
-			{"DR", new Vector2 (1.0f, -1.0f)},
-			{"D", new Vector2 (0.0f, -1.0f)},
-			{"DL", new Vector2 (-1.0f, -1.0f)},
-			{"L", new Vector2 (-1.0f, 0.0f)},
-			{"UL", new Vector2 (-1.0f, 1.0f)},
-		};
+			var clipPosition = suffixPositions[clipInfo.Suffix];
+			int clipIndexToReplace = -1;
 
-		private BlendType GetBlendTypeForClip(ImportedSingleAnimationInfo clipInfo)
-		{
-			if (!suffixPositions.ContainsKey(clipInfo.Suffix))
+			// First look for motions with the same clip name
+			for (int i = 0; i < tree.children.Length; i++)
 			{
-				return BlendType.SingleAnim;
+				var childMotion = tree.children[i];
+
+				if (childMotion.motion == null)
+				{
+					continue;
+				}
+
+				if (childMotion.motion.name == clipInfo.name)
+				{
+					clipIndexToReplace = i;
+					break;
+				}
 			}
 
-			return BlendType.EightDirection;
+			// If no clips have the same name, find one with the same position
+			if (clipIndexToReplace == -1)
+			{
+				for (int i = 0; i < tree.children.Length; i++)
+				{
+					var childMotion = tree.children[i];
+					if (childMotion.position == clipPosition)
+					{
+						clipIndexToReplace = i;
+						break;
+					}
+				}
+			}
+
+			return clipIndexToReplace;
 		}
 
-		private enum BlendType
-		{
-			SingleAnim,
-			TwoDirection,
-			FourDirection,
-			EightDirection
-		}
+		private Dictionary<string, Vector2> suffixPositions = new Dictionary<string, Vector2>() {
+			{ "U", new Vector2(0.0f, 1.0f) },
+			{ "UR", new Vector2(1.0f, 1.0f) },
+			{ "R", new Vector2(1.0f, 0.0f) },
+			{ "DR", new Vector2(1.0f, -1.0f) },
+			{ "D", new Vector2(0.0f, -1.0f) },
+			{ "DL", new Vector2(-1.0f, -1.0f) },
+			{ "L", new Vector2(-1.0f, 0.0f) },
+			{ "UL", new Vector2(-1.0f, 1.0f) },
+		};
 
 		private void CreateAnimatorOverrideController(ImportedAnimationInfo animations)
 		{
@@ -742,7 +758,7 @@ namespace AnimationImporter
 				case EventType.DragPerform:
 
 					if (!drop_area.Contains(evt.mousePosition)
-						|| !DraggedObjectsContainType<T>())
+					    || !DraggedObjectsContainType<T>())
 						return null;
 
 					DragAndDrop.visualMode = DragAndDropVisualMode.Copy;

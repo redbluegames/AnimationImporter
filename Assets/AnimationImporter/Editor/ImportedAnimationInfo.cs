@@ -12,11 +12,15 @@ namespace AnimationImporter
 	public class ImportedAnimationInfo
 	{
 		public string basePath { get; set; }
+
 		public string name { get; set; }
+
 		public List<string> nonLoopingAnimations { get; set; }
 
 		public int width { get; set; }
+
 		public int height { get; set; }
+
 		public int maxTextureSize
 		{
 			get
@@ -42,7 +46,7 @@ namespace AnimationImporter
 		//  public methods
 		// --------------------------------------------------------------------------------
 
-		// get animation by name; used when updating an existing AnimatorController 
+		// get animation by name; used when updating an existing AnimatorController
 		public AnimationClip GetClip(string clipName)
 		{
 			if (_animationDatabase == null)
@@ -86,7 +90,7 @@ namespace AnimationImporter
 		public void CreateAnimation(ImportedSingleAnimationInfo anim, List<Sprite> sprites, string basePath, string masterName)
 		{
 			AnimationClip clip;
-            string fileName = basePath + "/" + masterName + "_" + anim.name + ".anim";
+			string fileName = basePath + "/" + masterName + "_" + anim.name + ".anim";
 
 			// check if animation file already exists
 			clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(fileName);
@@ -108,8 +112,7 @@ namespace AnimationImporter
 				clip.SetLoop(false);
 			}
 
-			EditorCurveBinding curveBinding = new EditorCurveBinding
-			{
+			EditorCurveBinding curveBinding = new EditorCurveBinding {
 				path = "", // assume SpriteRenderer is at same GameObject as AnimationController
 				type = typeof(SpriteRenderer),
 				propertyName = "m_Sprite"
@@ -209,6 +212,7 @@ namespace AnimationImporter
 		// --------------------------------------------------------------------------------
 
 		private string _name;
+
 		public string name
 		{
 			get { return _name; }
@@ -224,7 +228,8 @@ namespace AnimationImporter
 		public int width;
 		public int height;
 
-		public int duration; // in milliseconds as part of an animation
+		public int duration;
+		// in milliseconds as part of an animation
 	}
 
 	public class ImportedSingleAnimationInfo
@@ -251,7 +256,8 @@ namespace AnimationImporter
 
 		public string Suffix
 		{
-			get {
+			get
+			{
 				var splitName = name.Split('_');
 				if (splitName.Length <= 1)
 				{
@@ -267,7 +273,8 @@ namespace AnimationImporter
 
 		public string RootName
 		{
-			get {
+			get
+			{
 				int suffixLength = Suffix.Length;
 				if (suffixLength == 0)
 				{
@@ -280,6 +287,14 @@ namespace AnimationImporter
 					var root = name.Substring(0, rootLength);
 					return root;
 				}
+			}
+		}
+
+		public string StateName
+		{
+			get
+			{
+				return RootName;
 			}
 		}
 
