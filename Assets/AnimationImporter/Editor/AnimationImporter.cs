@@ -19,6 +19,18 @@ namespace AnimationImporter
 
 		private const string PREFS_PREFIX = "ANIMATION_IMPORTER_";
 
+		// Define suffixes we use to designate blends, along with their corresponding blend positions
+		private readonly Dictionary<string, Vector2> blendPositions = new Dictionary<string, Vector2>() {
+			{ "U", new Vector2(0.0f, 1.0f) },
+			{ "UR", new Vector2(1.0f, 1.0f) },
+			{ "R", new Vector2(1.0f, 0.0f) },
+			{ "DR", new Vector2(1.0f, -1.0f) },
+			{ "D", new Vector2(0.0f, -1.0f) },
+			{ "DL", new Vector2(-1.0f, -1.0f) },
+			{ "L", new Vector2(-1.0f, 0.0f) },
+			{ "UL", new Vector2(-1.0f, 1.0f) },
+		};
+
 		// ================================================================================
 		//  user values
 		// --------------------------------------------------------------------------------
@@ -495,7 +507,7 @@ namespace AnimationImporter
 
 		private bool IsClipPartOfBlendTree(ImportedSingleAnimationInfo clipInfo)
 		{
-			return suffixPositions.ContainsKey(clipInfo.Suffix);
+			return blendPositions.ContainsKey(clipInfo.Suffix);
 		}
 
 		private static void InitializeBlendTree(ref BlendTree tree, string name)
@@ -516,7 +528,7 @@ namespace AnimationImporter
 				int clipIndexToReplace = GetExistingIndexForClipInTree(tree, clipInfo);
 				if (clipIndexToReplace == -1)
 				{
-					tree.AddChild(clipInfo.animationClip, suffixPositions[clipInfo.Suffix]);
+					tree.AddChild(clipInfo.animationClip, blendPositions[clipInfo.Suffix]);
 				}
 				else
 				{
@@ -534,7 +546,7 @@ namespace AnimationImporter
 		// Check if a BlendTree already has a motion (empty or not) for a clip
 		private int GetExistingIndexForClipInTree(BlendTree tree, ImportedSingleAnimationInfo clipInfo)
 		{
-			var clipPosition = suffixPositions[clipInfo.Suffix];
+			var clipPosition = blendPositions[clipInfo.Suffix];
 			int clipIndexToReplace = -1;
 
 			// First look for motions with the same clip name
@@ -570,17 +582,6 @@ namespace AnimationImporter
 
 			return clipIndexToReplace;
 		}
-
-		private Dictionary<string, Vector2> suffixPositions = new Dictionary<string, Vector2>() {
-			{ "U", new Vector2(0.0f, 1.0f) },
-			{ "UR", new Vector2(1.0f, 1.0f) },
-			{ "R", new Vector2(1.0f, 0.0f) },
-			{ "DR", new Vector2(1.0f, -1.0f) },
-			{ "D", new Vector2(0.0f, -1.0f) },
-			{ "DL", new Vector2(-1.0f, -1.0f) },
-			{ "L", new Vector2(-1.0f, 0.0f) },
-			{ "UL", new Vector2(-1.0f, 1.0f) },
-		};
 
 		private void CreateAnimatorOverrideController(ImportedAnimationInfo animations)
 		{
