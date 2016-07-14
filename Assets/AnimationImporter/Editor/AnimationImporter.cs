@@ -75,6 +75,23 @@ namespace AnimationImporter
 			}
 		}
 
+		private AnimationTargetObjectType _targetObjectType = AnimationTargetObjectType.SpriteRenderer;
+		public AnimationTargetObjectType targetObjectType
+		{
+			get
+			{
+				return _targetObjectType;
+			}
+			set
+			{
+				if (_targetObjectType != value)
+				{
+					_targetObjectType = value;
+					SaveUserConfig();
+				}
+			}
+		}
+
 		private SpriteAlignment _spriteAlignment = SpriteAlignment.BottomCenter;
 		public SpriteAlignment spriteAlignment
 		{
@@ -238,6 +255,10 @@ namespace AnimationImporter
 			{
 				_spritePixelsPerUnit = EditorPrefs.GetFloat(PREFS_PREFIX + "spritePixelsPerUnit");
 			}
+			if (EditorPrefs.HasKey(PREFS_PREFIX + "spriteTargetObjectType"))
+			{
+				_targetObjectType = (AnimationTargetObjectType)EditorPrefs.GetInt(PREFS_PREFIX + "spriteTargetObjectType");
+			}
 			if (EditorPrefs.HasKey(PREFS_PREFIX + "spriteAlignment"))
 			{
 				_spriteAlignment = (SpriteAlignment)EditorPrefs.GetInt(PREFS_PREFIX + "spriteAlignment");
@@ -296,6 +317,7 @@ namespace AnimationImporter
 			EditorPrefs.SetString(PREFS_PREFIX + "asepritePath", _asepritePath);
 
 			EditorPrefs.SetFloat(PREFS_PREFIX + "spritePixelsPerUnit", _spritePixelsPerUnit);
+			EditorPrefs.SetInt(PREFS_PREFIX + "spriteTargetObjectType", (int)_targetObjectType);
 			EditorPrefs.SetInt(PREFS_PREFIX + "spriteAlignment", (int)_spriteAlignment);
 			EditorPrefs.SetFloat(PREFS_PREFIX + "spriteAlignmentCustomX", _spriteAlignmentCustomX);
 			EditorPrefs.SetFloat(PREFS_PREFIX + "spriteAlignmentCustomY", _spriteAlignmentCustomY);
@@ -397,11 +419,13 @@ namespace AnimationImporter
 			string name = Path.GetFileNameWithoutExtension(assetPath);
 			string basePath = GetBasePath(assetPath);
 
+			// we analyze import settings on existing files
+			PreviousImportSettings previousAnimationInfo = CollectPreviousImportSettings(basePath, name);
+
 			if (AsepriteImporter.CreateSpriteAtlasAndMetaFile(_asepritePath, basePath, name, _saveSpritesToSubfolder))
 			{
 				AssetDatabase.Refresh();
-				AssetDatabase.Refresh();
-				return ImportJSONAndCreateAnimations(basePath, name);
+				return ImportJSONAndCreateAnimations(basePath, name, previousAnimationInfo);
 			}
 
 			return null;
@@ -485,14 +509,10 @@ namespace AnimationImporter
 			}
 		}
 
-		private ImportedAnimationInfo ImportJSONAndCreateAnimations(string assetBasePath, string name)
+		private ImportedAnimationInfo ImportJSONAndCreateAnimations(string basePath, string name, PreviousImportSettings previousImportSettings)
 		{
-			string imagePath = assetBasePath;
-			if (_saveSpritesToSubfolder)
-				imagePath += "/Sprites";
-
-			string imageAssetFilename = imagePath + "/" + name + ".png";
-			string textAssetFilename = imagePath + "/" + name + ".json";
+			string imageAssetFilename = GetImageAssetFilename(basePath, name);
+			string textAssetFilename = GetJSONAssetFilename(basePath, name);
 			TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(textAssetFilename);
 
 			if (textAsset != null)
@@ -504,7 +524,9 @@ namespace AnimationImporter
 				if (animationInfo == null)
 					return null;
 
-				animationInfo.basePath = assetBasePath;
+				animationInfo.previousImportSettings = previousImportSettings;
+
+				animationInfo.basePath = basePath;
 				animationInfo.name = name;
 				animationInfo.nonLoopingAnimations = _animationNamesThatDoNotLoop;
 
@@ -567,7 +589,7 @@ namespace AnimationImporter
 
 			foreach (var animation in animationInfo.animations)
 			{
-				animationInfo.CreateAnimation(animation, sprites, pathForAnimations, masterName);
+				animationInfo.CreateAnimation(animation, sprites, pathForAnimations, masterName, targetObjectType);
 			}
 		}
 
@@ -575,17 +597,28 @@ namespace AnimationImporter
 		{
 			TextureImporter importer = AssetImporter.GetAtPath(imageFile) as TextureImporter;
 
-			// adjust values for pixel art
-			importer.textureType = TextureImporterType.Sprite;
-			importer.spriteImportMode = SpriteImportMode.Multiple;
-			importer.spritePixelsPerUnit = _spritePixelsPerUnit;
-			importer.mipmapEnabled = false;
-			importer.filterMode = FilterMode.Point;
-			importer.textureFormat = TextureImporterFormat.AutomaticTruecolor;
-			importer.maxTextureSize = animations.maxTextureSize;
+			// apply texture import settings if there are no previous ones
+			if (!animations.hasPreviousTextureImportSettings)
+			{
+				importer.textureType = TextureImporterType.Sprite;
+				importer.spritePixelsPerUnit = _spritePixelsPerUnit;
+				importer.mipmapEnabled = false;
+				importer.filterMode = FilterMode.Point;
+				importer.textureFormat = TextureImporterFormat.AutomaticTruecolor;
+			}
 
 			// create sub sprites for this file according to the AsepriteAnimationInfo 
 			importer.spritesheet = animations.GetSpriteSheet(_spriteAlignment, _spriteAlignmentCustomX, _spriteAlignmentCustomY);
+
+			// reapply old import settings (pivot settings for sprites)
+			if (animations.hasPreviousTextureImportSettings)
+			{
+				animations.previousImportSettings.ApplyPreviousTextureImportSettings(importer);
+			}
+
+			// these values will be set in any case, not influenced by previous import settings
+			importer.spriteImportMode = SpriteImportMode.Multiple;
+			importer.maxTextureSize = animations.maxTextureSize;
 
 			EditorUtility.SetDirty(importer);
 
@@ -595,10 +628,19 @@ namespace AnimationImporter
 			}
 			catch (Exception e)
 			{
-				Debug.LogWarning("There was a potential problem with applying settings to the generated sprite file: " + e.ToString());
+				Debug.LogWarning("There was a problem with applying settings to the generated sprite file: " + e.ToString());
 			}
 
 			AssetDatabase.ImportAsset(imageFile, ImportAssetOptions.ForceUpdate);
+		}
+
+		private PreviousImportSettings CollectPreviousImportSettings(string basePath, string name)
+		{
+			PreviousImportSettings previousImportSettings = new PreviousImportSettings();
+
+			previousImportSettings.GetTextureImportSettings(GetImageAssetFilename(basePath, name));
+
+			return previousImportSettings;
 		}
 
 		// ================================================================================
@@ -622,6 +664,22 @@ namespace AnimationImporter
 			string lastPart = "/" + fileName + "." + extension;
 
 			return path.Replace(lastPart, "");
+		}
+
+		private string GetImageAssetFilename(string basePath, string name)
+		{
+			if (_saveSpritesToSubfolder)
+				basePath += "/Sprites";
+
+			return basePath + "/" + name + ".png";
+		}
+
+		private string GetJSONAssetFilename(string basePath, string name)
+		{
+			if (_saveSpritesToSubfolder)
+				basePath += "/Sprites";
+
+			return basePath + "/" + name + ".json";
 		}
 	}
 }

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
-using AnimationImporter.Boomlagoon.JSON;
 using UnityEditor;
 using System.Linq;
 
@@ -37,6 +36,26 @@ namespace AnimationImporter
 		}
 
 		private Dictionary<string, ImportedSingleAnimationInfo> _animationDatabase = null;
+
+		private PreviousImportSettings _previousImportSettings = null;
+		public PreviousImportSettings previousImportSettings
+		{
+			get
+			{
+				return _previousImportSettings;
+			}
+			set
+			{
+				_previousImportSettings = value;
+			}
+		}
+		public bool hasPreviousTextureImportSettings
+		{
+			get
+			{
+				return _previousImportSettings != null && _previousImportSettings.hasPreviousTextureImportSettings;
+			}
+		}
 
 		// ================================================================================
 		//  public methods
@@ -83,25 +102,28 @@ namespace AnimationImporter
 			return null;
 		}
 
-		public void CreateAnimation(ImportedSingleAnimationInfo anim, List<Sprite> sprites, string basePath, string masterName)
+		public void CreateAnimation(ImportedSingleAnimationInfo anim, List<Sprite> sprites, string basePath, string masterName, AnimationTargetObjectType targetType)
 		{
 			AnimationClip clip;
             string fileName = basePath + "/" + masterName + "_" + anim.name + ".anim";
+			bool isLooping = ShouldLoop(anim.name);
 
 			// check if animation file already exists
 			clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(fileName);
-			if (clip == null)
+			if (clip != null)
+			{
+				// get previous animation settings
+				targetType = PreviousImportSettings.GetAnimationTargetFromExistingClip(clip);
+				isLooping = clip.isLooping;
+			}
+			else
 			{
 				clip = new AnimationClip();
 				AssetDatabase.CreateAsset(clip, fileName);
 			}
-			else
-			{
-				clip.ClearCurves();
-			}
 
 			// change loop settings
-			if (ShouldLoop(anim.name))
+			if (isLooping)
 			{
 				clip.wrapMode = WrapMode.Loop;
 				clip.SetLoop(true);
@@ -111,13 +133,6 @@ namespace AnimationImporter
 				clip.wrapMode = WrapMode.Clamp;
 				clip.SetLoop(false);
 			}
-
-			EditorCurveBinding curveBinding = new EditorCurveBinding
-			{
-				path = "", // assume SpriteRenderer is at same GameObject as AnimationController
-				type = typeof(SpriteRenderer),
-				propertyName = "m_Sprite"
-			};
 
 			ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[anim.Count + 1]; // one more than sprites because we repeat the last sprite
 
@@ -138,20 +153,25 @@ namespace AnimationImporter
 			lastKeyFrame.value = lastSprite;
 			keyFrames[anim.Count] = lastKeyFrame;
 
-			// save animation clip values
-			AnimationUtility.SetObjectReferenceCurve(clip, curveBinding, keyFrames);
+			// save curve into clip, either for SpriteRenderer, Image, or both
+			if (targetType == AnimationTargetObjectType.SpriteRenderer)
+			{
+				AnimationUtility.SetObjectReferenceCurve(clip, AnimationClipHelper.spriteRendererCurveBinding, keyFrames);
+				AnimationUtility.SetObjectReferenceCurve(clip, AnimationClipHelper.imageCurveBinding, null);
+			}
+			else if (targetType == AnimationTargetObjectType.Image)
+			{
+				AnimationUtility.SetObjectReferenceCurve(clip, AnimationClipHelper.spriteRendererCurveBinding, null);
+				AnimationUtility.SetObjectReferenceCurve(clip, AnimationClipHelper.imageCurveBinding, keyFrames);
+			}
+			else if (targetType == AnimationTargetObjectType.SpriteRendererAndImage)
+			{
+				AnimationUtility.SetObjectReferenceCurve(clip, AnimationClipHelper.spriteRendererCurveBinding, keyFrames);
+				AnimationUtility.SetObjectReferenceCurve(clip, AnimationClipHelper.imageCurveBinding, keyFrames);
+			}
+
 			EditorUtility.SetDirty(clip);
 			anim.animationClip = clip;
-		}
-
-		private bool ShouldLoop(string name)
-		{
-			if (nonLoopingAnimations.Contains(name))
-			{
-				return false;
-			}
-			
-			return true;
 		}
 
 		public SpriteMetaData[] GetSpriteSheet(SpriteAlignment spriteAlignment, float customX, float customY)
@@ -193,6 +213,16 @@ namespace AnimationImporter
 		// ================================================================================
 		//  private methods
 		// --------------------------------------------------------------------------------
+
+		private bool ShouldLoop(string name)
+		{
+			if (nonLoopingAnimations.Contains(name))
+			{
+				return false;
+			}
+
+			return true;
+		}
 
 		private void BuildIndex()
 		{
