@@ -1,18 +1,21 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Random = UnityEngine.Random;
 using UnityEditor;
 using System.IO;
-using AnimationImporter.Boomlagoon.JSON;
 using UnityEditor.Animations;
 using System.Linq;
+using AnimationImporter.Aseprite;
 
 namespace AnimationImporter
 {
 	public class AnimationImporter
 	{
+		// ================================================================================
+		//	Singleton
+		// --------------------------------------------------------------------------------
+
 		private static AnimationImporter _instance = null;
 		public static AnimationImporter Instance
 		{
@@ -28,12 +31,21 @@ namespace AnimationImporter
 		}
 
 		// ================================================================================
+		//  delegates
+		// --------------------------------------------------------------------------------
+
+		public delegate ImportedAnimationSheet ImportDelegate(AnimationImportJob job, AnimationImporterSharedConfig config);
+
+		public delegate bool CustomReImportDelegate(string fileName);
+		public static CustomReImportDelegate HasCustomReImport = null;
+		public static CustomReImportDelegate HandleCustomReImport = null;
+
+		// ================================================================================
 		//  const
 		// --------------------------------------------------------------------------------
 
 		private const string PREFS_PREFIX = "ANIMATION_IMPORTER_";
-
-		private static string[] allowedExtensions = { "ase" };
+		private const string SHARED_CONFIG_PATH = "Assets/Resources/AnimationImporter/AnimationImporterConfig.asset";
 
 		// ================================================================================
 		//  user values
@@ -51,93 +63,6 @@ namespace AnimationImporter
 				if (_asepritePath != value)
 				{
 					_asepritePath = value;
-					SaveUserConfig();
-					CheckIfApplicationIsValid();
-				}
-			}
-		}
-
-		// sprite import values
-		private float _spritePixelsPerUnit = 100f;
-		public float spritePixelsPerUnit
-		{
-			get
-			{
-				return _spritePixelsPerUnit;
-			}
-			set
-			{
-				if (_spritePixelsPerUnit != value)
-				{
-					_spritePixelsPerUnit = value;
-					SaveUserConfig();
-				}
-			}
-		}
-
-		private AnimationTargetObjectType _targetObjectType = AnimationTargetObjectType.SpriteRenderer;
-		public AnimationTargetObjectType targetObjectType
-		{
-			get
-			{
-				return _targetObjectType;
-			}
-			set
-			{
-				if (_targetObjectType != value)
-				{
-					_targetObjectType = value;
-					SaveUserConfig();
-				}
-			}
-		}
-
-		private SpriteAlignment _spriteAlignment = SpriteAlignment.BottomCenter;
-		public SpriteAlignment spriteAlignment
-		{
-			get
-			{
-				return _spriteAlignment;
-			}
-			set
-			{
-				if (_spriteAlignment != value)
-				{
-					_spriteAlignment = value;
-					SaveUserConfig();
-				}
-			}
-		}
-
-		private float _spriteAlignmentCustomX = 0;
-		public float spriteAlignmentCustomX
-		{
-			get
-			{
-				return _spriteAlignmentCustomX;
-			}
-			set
-			{
-				if (_spriteAlignmentCustomX != value)
-				{
-					_spriteAlignmentCustomX = value;
-					SaveUserConfig();
-				}
-			}
-		}
-
-		private float _spriteAlignmentCustomY = 0;
-		public float spriteAlignmentCustomY
-		{
-			get
-			{
-				return _spriteAlignmentCustomY;
-			}
-			set
-			{
-				if (_spriteAlignmentCustomY != value)
-				{
-					_spriteAlignmentCustomY = value;
 					SaveUserConfig();
 				}
 			}
@@ -160,69 +85,39 @@ namespace AnimationImporter
 			}
 		}
 
-		private bool _saveSpritesToSubfolder = true;
-		public bool saveSpritesToSubfolder
+		private AnimationImporterSharedConfig _sharedData;
+		public AnimationImporterSharedConfig sharedData
 		{
 			get
 			{
-				return _saveSpritesToSubfolder;
-			}
-			set
-			{
-				if (_saveSpritesToSubfolder != value)
-				{
-					_saveSpritesToSubfolder = value;
-					SaveUserConfig();
-				}
+				return _sharedData;
 			}
 		}
-		private bool _saveAnimationsToSubfolder = true;
-		public bool saveAnimationsToSubfolder
-		{
-			get
-			{
-				return _saveAnimationsToSubfolder;
-			}
-			set
-			{
-				if (_saveAnimationsToSubfolder != value)
-				{
-					_saveAnimationsToSubfolder = value;
-					SaveUserConfig();
-				}
-			}
-		}
-
-		private bool _automaticImporting = false;
-		public bool automaticImporting
-		{
-			get
-			{
-				return _automaticImporting;
-			}
-			set
-			{
-				if (_automaticImporting != value)
-				{
-					_automaticImporting = value;
-					SaveUserConfig();
-				}
-			}
-		}
-
-		private List<string> _animationNamesThatDoNotLoop = new List<string>() { "death" };
-		public List<string> animationNamesThatDoNotLoop { get { return _animationNamesThatDoNotLoop; } }
 
 		// ================================================================================
-		//  private
+		//  Importer Plugins
 		// --------------------------------------------------------------------------------
 
-		private bool _hasApplication = false;
+		private static Dictionary<string, IAnimationImporterPlugin> _importerPlugins = new Dictionary<string, IAnimationImporterPlugin>();
+
+		public static void RegisterImporter(IAnimationImporterPlugin importer, params string[] extensions)
+		{
+			foreach (var extension in extensions)
+			{
+				_importerPlugins[extension] = importer;
+			}
+		}
+
+		// ================================================================================
+		//  validation
+		// --------------------------------------------------------------------------------
+
+		// this was used in the past, might be again in the future, so leave it here
 		public bool canImportAnimations
 		{
 			get
 			{
-				return _hasApplication;
+				return true;
 			}
 		}
 		public bool canImportAnimationsForOverrideController
@@ -237,11 +132,25 @@ namespace AnimationImporter
 		//  save and load user values
 		// --------------------------------------------------------------------------------
 
+		public void LoadOrCreateUserConfig()
+		{
+			LoadPreferences();
+
+			_sharedData = ScriptableObjectUtility.LoadOrCreateSaveData<AnimationImporterSharedConfig>(SHARED_CONFIG_PATH);
+		}
+
 		public void LoadUserConfig()
 		{
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "asepritePath"))
+			LoadPreferences();
+
+			_sharedData = ScriptableObjectUtility.LoadSaveData<AnimationImporterSharedConfig>(SHARED_CONFIG_PATH);
+		}
+
+		private void LoadPreferences()
+		{
+			if (PlayerPrefs.HasKey(PREFS_PREFIX + "asepritePath"))
 			{
-				_asepritePath = EditorPrefs.GetString(PREFS_PREFIX + "asepritePath");
+				_asepritePath = PlayerPrefs.GetString(PREFS_PREFIX + "asepritePath");
 			}
 			else
 			{
@@ -251,198 +160,167 @@ namespace AnimationImporter
 					_asepritePath = "";
 			}
 
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "spritePixelsPerUnit"))
+			if (PlayerPrefs.HasKey(PREFS_PREFIX + "baseControllerPath"))
 			{
-				_spritePixelsPerUnit = EditorPrefs.GetFloat(PREFS_PREFIX + "spritePixelsPerUnit");
-			}
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "spriteTargetObjectType"))
-			{
-				_targetObjectType = (AnimationTargetObjectType)EditorPrefs.GetInt(PREFS_PREFIX + "spriteTargetObjectType");
-			}
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "spriteAlignment"))
-			{
-				_spriteAlignment = (SpriteAlignment)EditorPrefs.GetInt(PREFS_PREFIX + "spriteAlignment");
-			}
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "spriteAlignmentCustomX"))
-			{
-				_spriteAlignmentCustomX = EditorPrefs.GetFloat(PREFS_PREFIX + "spriteAlignmentCustomX");
-			}
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "spriteAlignmentCustomY"))
-			{
-				_spriteAlignmentCustomY = EditorPrefs.GetFloat(PREFS_PREFIX + "spriteAlignmentCustomY");
-			}
-
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "saveSpritesToSubfolder"))
-			{
-				_saveSpritesToSubfolder = EditorPrefs.GetBool(PREFS_PREFIX + "saveSpritesToSubfolder");
-			}
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "saveAnimationsToSubfolder"))
-			{
-				_saveAnimationsToSubfolder = EditorPrefs.GetBool(PREFS_PREFIX + "saveAnimationsToSubfolder");
-			}
-
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "automaticImporting"))
-			{
-				_automaticImporting = EditorPrefs.GetBool(PREFS_PREFIX + "automaticImporting");
-			}
-
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "baseControllerPath"))
-			{
-				string baseControllerPath = EditorPrefs.GetString(PREFS_PREFIX + "baseControllerPath");
+				string baseControllerPath = PlayerPrefs.GetString(PREFS_PREFIX + "baseControllerPath");
 				if (!string.IsNullOrEmpty(baseControllerPath))
 				{
 					_baseController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(baseControllerPath);
 				}
 			}
-
-			if (EditorPrefs.HasKey(PREFS_PREFIX + "nonLoopCount"))
-			{
-				_animationNamesThatDoNotLoop = new List<string>();
-				int count = EditorPrefs.GetInt(PREFS_PREFIX + "nonLoopCount");
-
-				for (int i = 0; i < count; i++)
-				{
-					if (EditorPrefs.HasKey(PREFS_PREFIX + "nonLoopCount" + i.ToString()))
-					{
-						_animationNamesThatDoNotLoop.Add(EditorPrefs.GetString(PREFS_PREFIX + "nonLoopCount" + i.ToString()));
-					}
-				}
-			}
-
-			CheckIfApplicationIsValid();
 		}
 
 		private void SaveUserConfig()
 		{
-			EditorPrefs.SetString(PREFS_PREFIX + "asepritePath", _asepritePath);
-
-			EditorPrefs.SetFloat(PREFS_PREFIX + "spritePixelsPerUnit", _spritePixelsPerUnit);
-			EditorPrefs.SetInt(PREFS_PREFIX + "spriteTargetObjectType", (int)_targetObjectType);
-			EditorPrefs.SetInt(PREFS_PREFIX + "spriteAlignment", (int)_spriteAlignment);
-			EditorPrefs.SetFloat(PREFS_PREFIX + "spriteAlignmentCustomX", _spriteAlignmentCustomX);
-			EditorPrefs.SetFloat(PREFS_PREFIX + "spriteAlignmentCustomY", _spriteAlignmentCustomY);
-
-			EditorPrefs.SetBool(PREFS_PREFIX + "saveSpritesToSubfolder", _saveSpritesToSubfolder);
-			EditorPrefs.SetBool(PREFS_PREFIX + "saveAnimationsToSubfolder", _saveAnimationsToSubfolder);
-
-			EditorPrefs.SetBool(PREFS_PREFIX + "automaticImporting", _automaticImporting);
+			PlayerPrefs.SetString(PREFS_PREFIX + "asepritePath", _asepritePath);
 
 			if (_baseController != null)
 			{
-				EditorPrefs.SetString(PREFS_PREFIX + "baseControllerPath", AssetDatabase.GetAssetPath(_baseController));
+				PlayerPrefs.SetString(PREFS_PREFIX + "baseControllerPath", AssetDatabase.GetAssetPath(_baseController));
 			}
 			else
 			{
-				EditorPrefs.SetString(PREFS_PREFIX + "baseControllerPath", "");
+				PlayerPrefs.SetString(PREFS_PREFIX + "baseControllerPath", "");
 			}
-
-			EditorPrefs.SetInt(PREFS_PREFIX + "nonLoopCount", _animationNamesThatDoNotLoop.Count);
-			for (int i = 0; i < _animationNamesThatDoNotLoop.Count; i++)
-			{
-				EditorPrefs.SetString(PREFS_PREFIX + "nonLoopCount" + i.ToString(), _animationNamesThatDoNotLoop[i]);
-			}
-		}
-
-		public void RemoveAnimationThatDoesNotLoop(int index)
-		{
-			_animationNamesThatDoNotLoop.RemoveAt(index);
-			SaveUserConfig();
-		}
-
-		public bool AddAnimationThatDoesNotLoop(string animationName)
-		{
-			if (string.IsNullOrEmpty(animationName) || _animationNamesThatDoNotLoop.Contains(animationName))
-				return false;
-
-			_animationNamesThatDoNotLoop.Add(animationName);
-			SaveUserConfig();
-
-			return true;
 		}
 
 		// ================================================================================
 		//  import methods
 		// --------------------------------------------------------------------------------
 
-		// check if this is a valid file; we are only looking at the file extension here
-		public static bool IsValidAsset(string path)
+		public void ImportAssets(DefaultAsset[] assets, ImportAnimatorController importAnimatorController = ImportAnimatorController.None)
 		{
-			string name = Path.GetFileNameWithoutExtension(path);
+			List<AnimationImportJob> jobs = new List<AnimationImportJob>();
 
-			for (int i = 0; i < allowedExtensions.Length; i++)
+			foreach (var asset in assets)
 			{
-				string lastPart = "/" + name + "." + allowedExtensions[i];
-
-				if (path.Contains(lastPart))
+				string assetPath = AssetDatabase.GetAssetPath(asset);
+				if (!IsValidAsset(assetPath))
 				{
-					return true;
+					continue;
 				}
+
+				AnimationImportJob job = CreateAnimationImportJob(assetPath);
+				job.importAnimatorController = importAnimatorController;
+				jobs.Add(job);
 			}
 
-			return false;
+			Import(jobs.ToArray());
 		}
 
-		public bool HasExistingAnimatorController(string assetPath)
-		{
-			string name = Path.GetFileNameWithoutExtension(assetPath);
-			string basePath = GetBasePath(assetPath);
-
-			string pathForController = basePath + "/" + name + ".controller";
-			AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(pathForController);
-
-			return controller != null;
-		}
-
-		public bool HasExistingAnimatorOverrideController(string assetPath)
-		{
-			string name = Path.GetFileNameWithoutExtension(assetPath);
-			string basePath = GetBasePath(assetPath);
-
-			string pathForController = basePath + "/" + name + ".overrideController";
-			AnimatorOverrideController controller = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(pathForController);
-
-			return controller != null;
-		}
-
-		public ImportedAnimationInfo CreateAnimationsForAssetFile(DefaultAsset droppedAsset)
-		{
-			return CreateAnimationsForAssetFile(AssetDatabase.GetAssetPath(droppedAsset));
-		}
-
-		public ImportedAnimationInfo CreateAnimationsForAssetFile(string assetPath)
+		/// <summary>
+		/// can be used by custom import pipeline
+		/// </summary>
+		public ImportedAnimationSheet ImportSpritesAndAnimationSheet(string assetPath, string additionalCommandLineArguments = null)
 		{
 			if (!IsValidAsset(assetPath))
 			{
 				return null;
 			}
 
-			string name = Path.GetFileNameWithoutExtension(assetPath);
-			string basePath = GetBasePath(assetPath);
-
-			// we analyze import settings on existing files
-			PreviousImportSettings previousAnimationInfo = CollectPreviousImportSettings(basePath, name);
-
-			if (AsepriteImporter.CreateSpriteAtlasAndMetaFile(_asepritePath, basePath, name, _saveSpritesToSubfolder))
+			// making sure config is valid
+			if (sharedData == null)
 			{
-				AssetDatabase.Refresh();
-				return ImportJSONAndCreateAnimations(basePath, name, previousAnimationInfo);
+				LoadOrCreateUserConfig();
 			}
 
-			return null;
+			// create a job
+			AnimationImportJob job = CreateAnimationImportJob(assetPath, additionalCommandLineArguments);
+			job.createUnityAnimations = false;
+
+			return ImportJob(job);
 		}
 
-		public void CreateAnimatorController(ImportedAnimationInfo animations)
+		private void Import(AnimationImportJob[] jobs)
+		{
+			if (jobs == null || jobs.Length == 0)
+			{
+				return;
+			}
+
+			float progressPerJob = 1f / jobs.Length;
+
+			try
+			{
+				for (int i = 0; i < jobs.Length; i++)
+				{
+					AnimationImportJob job = jobs[i];
+
+					job.progressUpdated += (float progress) => {							
+							float completeProgress = i * progressPerJob + progress * progressPerJob;
+							EditorUtility.DisplayProgressBar("Import", job.name, completeProgress);
+						};
+					ImportJob(job);
+				}
+				AssetDatabase.Refresh();
+			}
+			catch (Exception error)
+			{
+				Debug.LogWarning(error.ToString());
+				throw;
+			}
+
+			EditorUtility.ClearProgressBar();
+		}
+
+		private ImportedAnimationSheet ImportJob(AnimationImportJob job)
+		{
+			job.SetProgress(0);
+
+			IAnimationImporterPlugin importer = _importerPlugins[GetExtension(job.fileName)];
+			ImportedAnimationSheet animationSheet = importer.Import(job, sharedData);
+
+			job.SetProgress(0.3f);
+
+			if (animationSheet != null)
+			{
+				animationSheet.assetDirectory = job.assetDirectory;
+				animationSheet.name = job.name;
+
+				animationSheet.ApplySpriteNamingScheme(sharedData.spriteNamingScheme);
+
+				CreateSprites(animationSheet);
+
+				job.SetProgress(0.6f);
+
+				if (job.createUnityAnimations)
+				{
+					CreateAnimations(animationSheet);
+
+					job.SetProgress(0.8f);
+
+					if (job.importAnimatorController == ImportAnimatorController.AnimatorController)
+					{
+						CreateAnimatorController(animationSheet);
+					}
+					else if (job.importAnimatorController == ImportAnimatorController.AnimatorOverrideController)
+					{
+						CreateAnimatorOverrideController(animationSheet, job.useExistingAnimatorController);
+					}
+				}
+			}
+
+			return animationSheet;
+		}
+
+		// ================================================================================
+		//  create animator controllers
+		// --------------------------------------------------------------------------------
+
+		private void CreateAnimatorController(ImportedAnimationSheet animations)
 		{
 			AnimatorController controller;
 
+			string directory = sharedData.animationControllersTargetLocation.GetAndEnsureTargetDirectory(animations.assetDirectory);
+
 			// check if controller already exists; use this to not loose any references to this in other assets
-			string pathForAnimatorController = animations.basePath + "/" + animations.name + ".controller";
+			string pathForAnimatorController = directory + "/" + animations.name + ".controller";
 			controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(pathForAnimatorController);
 
 			if (controller == null)
 			{
 				// create a new controller and place every animation as a state on the first layer
-				controller = AnimatorController.CreateAnimatorControllerAtPath(animations.basePath + "/" + animations.name + ".controller");
+				controller = AnimatorController.CreateAnimatorControllerAtPath(pathForAnimatorController);
 				controller.AddLayer("Default");
 
 				foreach (var animation in animations.animations)
@@ -467,12 +345,14 @@ namespace AnimationImporter
 			AssetDatabase.SaveAssets();
 		}
 
-		public void CreateAnimatorOverrideController(ImportedAnimationInfo animations, bool useExistingBaseController = false)
+		private void CreateAnimatorOverrideController(ImportedAnimationSheet animations, bool useExistingBaseController = false)
 		{
 			AnimatorOverrideController overrideController;
 
+			string directory = sharedData.animationControllersTargetLocation.GetAndEnsureTargetDirectory(animations.assetDirectory);
+
 			// check if override controller already exists; use this to not loose any references to this in other assets
-			string pathForOverrideController = animations.basePath + "/" + animations.name + ".overrideController";
+			string pathForOverrideController = directory + "/" + animations.name + ".overrideController";
 			overrideController = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(pathForOverrideController);
 
 			RuntimeAnimatorController baseController = _baseController;
@@ -509,116 +389,76 @@ namespace AnimationImporter
 			}
 		}
 
-		private ImportedAnimationInfo ImportJSONAndCreateAnimations(string basePath, string name, PreviousImportSettings previousImportSettings)
+		// ================================================================================
+		//  create sprites and animations
+		// --------------------------------------------------------------------------------
+
+		private void CreateAnimations(ImportedAnimationSheet animationSheet)
 		{
-			string imageAssetFilename = GetImageAssetFilename(basePath, name);
-			string textAssetFilename = GetJSONAssetFilename(basePath, name);
-			TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(textAssetFilename);
-
-			if (textAsset != null)
+			if (animationSheet == null)
 			{
-				// parse the JSON file
-				JSONObject jsonObject = JSONObject.Parse(textAsset.ToString());
-				ImportedAnimationInfo animationInfo = AsepriteImporter.GetAnimationInfo(jsonObject);
-
-				if (animationInfo == null)
-					return null;
-
-				animationInfo.previousImportSettings = previousImportSettings;
-
-				animationInfo.basePath = basePath;
-				animationInfo.name = name;
-				animationInfo.nonLoopingAnimations = _animationNamesThatDoNotLoop;
-
-				// delete JSON file afterwards
-				AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(textAsset));
-
-				CreateSprites(animationInfo, imageAssetFilename);
-
-				CreateAnimations(animationInfo, imageAssetFilename);
-
-				return animationInfo;
-			}
-			else
-			{
-				Debug.LogWarning("Problem with JSON file: " + textAssetFilename);
+				return;
 			}
 
-			return null;
-		}
+			string imageAssetFilename = GetImageAssetFilename(animationSheet.assetDirectory, animationSheet.name);
 
-		private void CreateAnimations(ImportedAnimationInfo animationInfo, string imageAssetFilename)
-		{
-			if (animationInfo.hasAnimations)
+			if (animationSheet.hasAnimations)
 			{
-				if (_saveAnimationsToSubfolder)
-				{
-					string path = animationInfo.basePath + "/Animations";
-					if (!Directory.Exists(path))
-					{
-						Directory.CreateDirectory(path);
-					}
-
-					CreateAnimationAssets(animationInfo, imageAssetFilename, path);
-				}
-				else
-				{
-					CreateAnimationAssets(animationInfo, imageAssetFilename, animationInfo.basePath);
-				}
+				string targetPath = _sharedData.animationsTargetLocation.GetAndEnsureTargetDirectory(animationSheet.assetDirectory);
+				CreateAnimationAssets(animationSheet, imageAssetFilename, targetPath);
 			}
 		}
 
-		private void CreateAnimationAssets(ImportedAnimationInfo animationInfo, string imageAssetFilename, string pathForAnimations)
+		private void CreateAnimationAssets(ImportedAnimationSheet animationInfo, string imageAssetFilename, string pathForAnimations)
 		{
 			string masterName = Path.GetFileNameWithoutExtension(imageAssetFilename);
 
-			var assets = AssetDatabase.LoadAllAssetsAtPath(imageAssetFilename);
-			List<Sprite> sprites = new List<Sprite>();
-			foreach (var item in assets)
-			{
-				if (item is Sprite)
-				{
-					sprites.Add(item as Sprite);
-				}
-			}
-
-			// we order the sprites by name here because the LoadAllAssets above does not necessarily return the sprites in correct order
-			// the OrderBy is fed with the last word of the name, which is an int from 0 upwards
-			sprites = sprites.OrderBy(x => int.Parse(x.name.Substring(x.name.LastIndexOf(' ')).TrimStart()))
-							 .ToList();
-
 			foreach (var animation in animationInfo.animations)
 			{
-				animationInfo.CreateAnimation(animation, sprites, pathForAnimations, masterName, targetObjectType);
+				animationInfo.CreateAnimation(animation, pathForAnimations, masterName, sharedData.targetObjectType);
 			}
 		}
 
-		private void CreateSprites(ImportedAnimationInfo animations, string imageFile)
+		private void CreateSprites(ImportedAnimationSheet animationSheet)
 		{
+			if (animationSheet == null)
+			{
+				return;
+			}
+
+			string imageFile = GetImageAssetFilename(animationSheet.assetDirectory, animationSheet.name);
+
 			TextureImporter importer = AssetImporter.GetAtPath(imageFile) as TextureImporter;
 
 			// apply texture import settings if there are no previous ones
-			if (!animations.hasPreviousTextureImportSettings)
+			if (!animationSheet.hasPreviousTextureImportSettings)
 			{
 				importer.textureType = TextureImporterType.Sprite;
-				importer.spritePixelsPerUnit = _spritePixelsPerUnit;
+				importer.spritePixelsPerUnit = sharedData.spritePixelsPerUnit;
 				importer.mipmapEnabled = false;
 				importer.filterMode = FilterMode.Point;
+#if UNITY_5_5_OR_NEWER
+				importer.textureCompression = TextureImporterCompression.Uncompressed;
+#else
 				importer.textureFormat = TextureImporterFormat.AutomaticTruecolor;
+#endif
 			}
 
 			// create sub sprites for this file according to the AsepriteAnimationInfo 
-			importer.spritesheet = animations.GetSpriteSheet(_spriteAlignment, _spriteAlignmentCustomX, _spriteAlignmentCustomY);
+			importer.spritesheet = animationSheet.GetSpriteSheet(
+				sharedData.spriteAlignment,
+				sharedData.spriteAlignmentCustomX,
+				sharedData.spriteAlignmentCustomY);
 
 			// reapply old import settings (pivot settings for sprites)
-			if (animations.hasPreviousTextureImportSettings)
+			if (animationSheet.hasPreviousTextureImportSettings)
 			{
-				animations.previousImportSettings.ApplyPreviousTextureImportSettings(importer);
+				animationSheet.previousImportSettings.ApplyPreviousTextureImportSettings(importer);
 			}
 
 			// these values will be set in any case, not influenced by previous import settings
 			importer.spriteImportMode = SpriteImportMode.Multiple;
-			importer.maxTextureSize = animations.maxTextureSize;
+			importer.maxTextureSize = animationSheet.maxTextureSize;
 
 			EditorUtility.SetDirty(importer);
 
@@ -632,24 +472,193 @@ namespace AnimationImporter
 			}
 
 			AssetDatabase.ImportAsset(imageFile, ImportAssetOptions.ForceUpdate);
+
+			Sprite[] createdSprites = GetAllSpritesFromAssetFile(imageFile);
+			animationSheet.ApplyCreatedSprites(createdSprites);
 		}
 
-		private PreviousImportSettings CollectPreviousImportSettings(string basePath, string name)
+		private static Sprite[] GetAllSpritesFromAssetFile(string imageFilename)
 		{
-			PreviousImportSettings previousImportSettings = new PreviousImportSettings();
+			var assets = AssetDatabase.LoadAllAssetsAtPath(imageFilename);
 
-			previousImportSettings.GetTextureImportSettings(GetImageAssetFilename(basePath, name));
+			// make sure we only grab valid sprites here
+			List<Sprite> sprites = new List<Sprite>();
+			foreach (var item in assets)
+			{
+				if (item is Sprite)
+				{
+					sprites.Add(item as Sprite);
+				}
+			}
 
-			return previousImportSettings;
+			return sprites.ToArray();
 		}
+
+		// ================================================================================
+		//  querying existing assets
+		// --------------------------------------------------------------------------------
+
+		// check if this is a valid file; we are only looking at the file extension here
+		public static bool IsValidAsset(string path)
+		{
+			string extension = GetExtension(path);
+
+			if (!string.IsNullOrEmpty(path))
+			{
+				if (_importerPlugins.ContainsKey(extension))
+				{
+					IAnimationImporterPlugin importer = _importerPlugins[extension];
+					if (importer != null)
+					{
+						return importer.IsValid();
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private static string GetExtension(string path)
+		{
+			if (string.IsNullOrEmpty(path))
+			{
+				return null;
+			}
+
+			string extension = Path.GetExtension(path);
+			if (extension.StartsWith("."))
+			{
+				extension = extension.Remove(0, 1);
+			}
+
+			return extension;
+		}
+
+		public bool HasExistingRuntimeAnimatorController(string assetPath)
+		{
+			return HasExistingAnimatorController(assetPath) || HasExistingAnimatorOverrideController(assetPath);
+		}
+
+		public bool HasExistingAnimatorController(string assetPath)
+		{
+			return GetExistingAnimatorController(assetPath) != null;
+		}
+
+		public bool HasExistingAnimatorOverrideController(string assetPath)
+		{
+			return GetExistingAnimatorOverrideController(assetPath) != null;
+		}
+
+		public RuntimeAnimatorController GetExistingRuntimeAnimatorController(string assetPath)
+		{
+			AnimatorController animatorController = GetExistingAnimatorController(assetPath);
+			if (animatorController != null)
+			{
+				return animatorController;
+			}
+
+			return GetExistingAnimatorOverrideController(assetPath);
+		}
+
+		public AnimatorController GetExistingAnimatorController(string assetPath)
+		{
+			string name = Path.GetFileNameWithoutExtension(assetPath);
+			string basePath = GetBasePath(assetPath);
+			string targetDirectory = sharedData.animationControllersTargetLocation.GetTargetDirectory(basePath);
+
+			string pathForController = targetDirectory + "/" + name + ".controller";
+			AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(pathForController);
+
+			return controller;
+		}
+
+		public AnimatorOverrideController GetExistingAnimatorOverrideController(string assetPath)
+		{
+			string name = Path.GetFileNameWithoutExtension(assetPath);
+			string basePath = GetBasePath(assetPath);
+			string targetDirectory = sharedData.animationControllersTargetLocation.GetTargetDirectory(basePath);
+
+			string pathForController = targetDirectory + "/" + name + ".overrideController";
+			AnimatorOverrideController controller = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(pathForController);
+
+			return controller;
+		}
+
+		// ================================================================================
+		//  automatic ReImport
+		// --------------------------------------------------------------------------------
+
+		/// <summary>
+		/// will be called by the AssetPostProcessor
+		/// </summary>
+		public void AutomaticReImport(string[] assetPaths)
+		{
+			if (sharedData == null)
+			{
+				LoadOrCreateUserConfig();
+			}
+
+			List<AnimationImportJob> jobs = new List<AnimationImportJob>();
+
+			foreach (var assetPath in assetPaths)
+			{
+				if (string.IsNullOrEmpty(assetPath))
+				{
+					continue;
+				}
+
+				if (HandleCustomReImport != null && HandleCustomReImport(assetPath))
+				{
+					continue;
+				}
+
+				AnimationImportJob job = CreateAnimationImportJob(assetPath);
+				if (job != null)
+				{
+					if (HasExistingAnimatorController(assetPath))
+					{
+						job.importAnimatorController = ImportAnimatorController.AnimatorController;
+					}
+					else if (HasExistingAnimatorOverrideController(assetPath))
+					{
+						job.importAnimatorController = ImportAnimatorController.AnimatorOverrideController;
+						job.useExistingAnimatorController = true;
+					}
+
+					jobs.Add(job);
+				}
+			}
+
+			Import(jobs.ToArray());
+		}		
 
 		// ================================================================================
 		//  private methods
 		// --------------------------------------------------------------------------------
 
-		private void CheckIfApplicationIsValid()
+		private AnimationImportJob CreateAnimationImportJob(string assetPath, string additionalCommandLineArguments = "")
 		{
-			_hasApplication = File.Exists(_asepritePath);
+			AnimationImportJob importJob = new AnimationImportJob(assetPath);
+
+			importJob.additionalCommandLineArguments = additionalCommandLineArguments;
+
+			importJob.directoryPathForSprites = _sharedData.spritesTargetLocation.GetAndEnsureTargetDirectory(importJob.assetDirectory);
+			importJob.directoryPathForAnimations = _sharedData.animationsTargetLocation.GetAndEnsureTargetDirectory(importJob.assetDirectory);
+			importJob.directoryPathForAnimationControllers = _sharedData.animationControllersTargetLocation.GetAndEnsureTargetDirectory(importJob.assetDirectory);
+
+			// we analyze import settings on existing files
+			importJob.previousImportSettings = CollectPreviousImportSettings(importJob);
+
+			return importJob;
+		}
+
+		private PreviousImportSettings CollectPreviousImportSettings(AnimationImportJob importJob)
+		{
+			PreviousImportSettings previousImportSettings = new PreviousImportSettings();
+
+			previousImportSettings.GetTextureImportSettings(importJob.imageAssetFilename);
+
+			return previousImportSettings;
 		}
 
 		private string GetBasePath(string path)
@@ -668,18 +677,9 @@ namespace AnimationImporter
 
 		private string GetImageAssetFilename(string basePath, string name)
 		{
-			if (_saveSpritesToSubfolder)
-				basePath += "/Sprites";
+			string directory = sharedData.spritesTargetLocation.GetAndEnsureTargetDirectory(basePath);
 
-			return basePath + "/" + name + ".png";
-		}
-
-		private string GetJSONAssetFilename(string basePath, string name)
-		{
-			if (_saveSpritesToSubfolder)
-				basePath += "/Sprites";
-
-			return basePath + "/" + name + ".json";
+			return directory + "/" + name + ".png";
 		}
 	}
 }

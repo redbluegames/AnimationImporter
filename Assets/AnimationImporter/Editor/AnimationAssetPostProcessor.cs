@@ -25,9 +25,16 @@ namespace AnimationImporter
 				return;
 			}
 
+			// Do not create shared config during AssetPostprocess, or else it will recreate an empty config
 			importer.LoadUserConfig();
 
-			if (importer.automaticImporting)
+			// If no config exists, they can't have set up automatic importing so just return out.
+			if (importer.sharedData == null)
+			{
+				return;
+			}
+
+			if (importer.sharedData.automaticImporting)
 			{
 				List<string> markedAssets = new List<string>();
 
@@ -68,7 +75,8 @@ namespace AnimationImporter
 				return;
 			}
 
-			if (importer.HasExistingAnimatorController(asset)
+			if ((AnimationImporter.HasCustomReImport != null && AnimationImporter.HasCustomReImport(asset))
+				|| importer.HasExistingAnimatorController(asset)
 				|| importer.HasExistingAnimatorOverrideController(asset))
 			{
 				markedAssets.Add(asset);
@@ -83,32 +91,7 @@ namespace AnimationImporter
 			AssetDatabase.Refresh();
 			AnimationImporter importer = AnimationImporter.Instance;
 
-			foreach (var item in _assetsMarkedForImport)
-			{
-				if (item == null)
-				{
-					continue;
-				}
-
-				if (importer.HasExistingAnimatorController(item))
-				{
-					var animationInfo = importer.CreateAnimationsForAssetFile(item);
-
-					if (animationInfo != null)
-					{
-						importer.CreateAnimatorController(animationInfo);
-					}
-				}
-				else if (importer.HasExistingAnimatorOverrideController(item))
-				{
-					var animationInfo = importer.CreateAnimationsForAssetFile(item);
-
-					if (animationInfo != null)
-					{
-						importer.CreateAnimatorOverrideController(animationInfo, true);
-					}
-				}
-			}
+			importer.AutomaticReImport(_assetsMarkedForImport.ToArray());
 
 			_assetsMarkedForImport.Clear();
 		}
